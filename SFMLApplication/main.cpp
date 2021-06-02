@@ -11,18 +11,18 @@ const int tileSize = 100;
 const int MAX_TILES = windowSize / tileSize;
 //std::list<Tile> tiles;
 //Transpose of actual graphic
-const short mapMap [MAX_TILES][MAX_TILES] = {   {2,1,1,1,1,1,1,1,1,1},
+const uint8_t mapMap [MAX_TILES][MAX_TILES] = { {2,1,1,1,1,1,1,1,1,1},
 												{0,0,0,0,0,0,0,0,1,0},
 												{1,1,1,1,1,1,1,1,1,1},
 												{1,0,0,0,0,0,1,0,0,0},
 												{1,1,1,1,1,1,1,1,1,1},
 												{0,0,1,0,0,0,0,0,1,0},
 												{1,1,1,1,1,1,1,1,1,1},
-												{1,0,0,0,0,1,0,0,0,1},
-												{1,0,0,0,0,1,0,0,0,1},
-												{1,1,1,1,1,1,1,1,1,3} };
+												{1,0,0,0,0,0,0,0,0,0},
+												{1,0,0,0,0,0,0,0,0,0},
+												{1,1,1,1,1,1,1,1,1,3}};
 bool isIn;
-double step = tileSize * 0.002, playerSize = (double) (tileSize - 10)/2.0, x = 40, y = 40;
+double step = tileSize * 0.05, playerSize = (double) (tileSize - 10)/2.0, x = 40, y = 40;
 int allowance = (tileSize - playerSize * 2) / 2 * 1 ;
 sf::CircleShape player(playerSize);
 
@@ -51,8 +51,6 @@ public:
 		shape.setPosition(posx, posy);
 	}
 	StartTile() = default;
-	
-
 };
 
 class EndTile : public Tile{
@@ -72,28 +70,16 @@ StartTile stl;
 EndTile enl;
 
 bool checkLeft(int x, int y) {
-	if (y > 0) {
-		return (mapMap[x][y - 1] > 0);
-	}
-	return false;
+	return (y > 0) ? (mapMap[x][y - 1] > 0) : false;
 }
 bool checkRight(int x, int y) {
-	if (y < MAX_TILES) {
-		return (mapMap[x][y + 1] > 0);
-	}
-	return false;
+	return  (y < MAX_TILES) ? (mapMap[x][y + 1] > 0) : false;
 }
 bool checkUp(int x, int y) {
-	if (x > 0) {
-		return (mapMap[x - 1][y] > 0);
-	}
-	return false;
+	return (x > 0) ? (mapMap[x - 1][y] > 0) : false;
 }
 bool checkDown(int x, int y) {
-	if (x < MAX_TILES) {
-		return (mapMap[x + 1][y] > 0);
-	}
-	return false;
+	return (x < MAX_TILES) ? mapMap[x + 1][y] > 0 : false;
 }
 bool checkAround(int x, int y) {
 	return checkLeft(x, y) || checkRight(x, y) || checkUp(x, y) || checkDown(x, y);
@@ -200,7 +186,6 @@ void circleControl() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && (x < (windowSize - player.getRadius()))) {
 		x = x + step;
 	}
-
 	return;
 }
 
